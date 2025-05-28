@@ -1,0 +1,54 @@
+@model IEnumerable<HOTBOOK.Models.Room>
+
+@{
+    ViewData["Title"] = "Rooms";
+}
+
+<div class="container">
+    <h1 class="mb-4">Rooms</h1>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add New Room
+        </a>
+        <a asp-action="Available" class="btn btn-success">
+            <i class="bi bi-calendar-check"></i> Check Availability
+        </a>
+    </p>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Room @item.RoomNumber</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@item.RoomType?.Name</h6>
+                        <p class="card-text">
+                            <strong>Floor:</strong> @item.Floor<br />
+                            <strong>Price per night:</strong> $@item.PricePerNight<br />
+                            <strong>Status:</strong> 
+                            <span class="badge @(item.IsAvailable ? "bg-success" : "bg-danger")">
+                                @(item.IsAvailable ? "Available" : "Occupied")
+                            </span>
+                        </p>
+                        <p class="card-text">@item.Description</p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group" role="group">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">
+                                <i class="bi bi-info-circle"></i> Details
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div> 

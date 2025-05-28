@@ -1,0 +1,88 @@
+@model HOTBOOK.Models.Booking
+
+@{
+    ViewData["Title"] = "New Booking";
+}
+
+<div class="container">
+    <h1>New Booking</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="GuestId" class="control-label">Guest</label>
+                    <select asp-for="GuestId" class="form-select" asp-items="@(new SelectList(ViewBag.Guests, "Id", "FullName"))">
+                        <option value="">-- Select Guest --</option>
+                    </select>
+                    <span asp-validation-for="GuestId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="RoomId" class="control-label">Room</label>
+                    <select asp-for="RoomId" class="form-select" asp-items="@(new SelectList(ViewBag.Rooms, "Id", "RoomNumber"))">
+                        <option value="">-- Select Room --</option>
+                    </select>
+                    <span asp-validation-for="RoomId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="CheckInDate" class="control-label">Check-in Date</label>
+                    <input asp-for="CheckInDate" class="form-control" type="date" />
+                    <span asp-validation-for="CheckInDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="CheckOutDate" class="control-label">Check-out Date</label>
+                    <input asp-for="CheckOutDate" class="form-control" type="date" />
+                    <span asp-validation-for="CheckOutDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="NumberOfGuests" class="control-label">Number of Guests</label>
+                    <input asp-for="NumberOfGuests" class="form-control" type="number" min="1" />
+                    <span asp-validation-for="NumberOfGuests" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="SpecialRequests" class="control-label">Special Requests</label>
+                    <textarea asp-for="SpecialRequests" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="SpecialRequests" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Create Booking
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Add date validation
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkInInput = document.querySelector('input[name="CheckInDate"]');
+            const checkOutInput = document.querySelector('input[name="CheckOutDate"]');
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            checkInInput.min = today;
+            
+            checkInInput.addEventListener('change', function() {
+                checkOutInput.min = this.value;
+                if (checkOutInput.value && checkOutInput.value < this.value) {
+                    checkOutInput.value = this.value;
+                }
+            });
+        });
+    </script>
+} 

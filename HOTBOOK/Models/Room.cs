@@ -1,5 +1,6 @@
-using System;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HOTBOOK.Models
 {
@@ -11,8 +12,12 @@ namespace HOTBOOK.Models
         [StringLength(10)]
         public string RoomNumber { get; set; }
 
-        [Required]
-        public int RoomTypeId { get; set; }
+        [Required(ErrorMessage = "Room type is required.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid room type.")]
+        public int? RoomTypeId { get; set; }
+
+        [ForeignKey("RoomTypeId")]
+        [ValidateNever]
         public RoomType RoomType { get; set; }
 
         [Required]
@@ -28,4 +33,4 @@ namespace HOTBOOK.Models
 
         public string Status { get; set; } // Available, Occupied, Maintenance
     }
-} 
+}

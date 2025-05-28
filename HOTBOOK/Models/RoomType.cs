@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HOTBOOK.Models
 {
@@ -17,6 +18,7 @@ namespace HOTBOOK.Models
 
         public string Description { get; set; }
 
-        public ICollection<Room> Rooms { get; set; }
+        [InverseProperty("RoomType")]
+        public ICollection<Room> Rooms { get; set; } = new List<Room>();
     }
 } 

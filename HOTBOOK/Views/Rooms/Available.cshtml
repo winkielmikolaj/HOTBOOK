@@ -1,0 +1,65 @@
+@model IEnumerable<HOTBOOK.Models.Room>
+
+@{
+    ViewData["Title"] = "Available Rooms";
+}
+
+<div class="container">
+    <h1 class="mb-4">Available Rooms</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form asp-action="Available" method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="checkIn" class="form-label">Check-in Date</label>
+                    <input type="date" id="checkIn" name="checkIn" class="form-control" value="@ViewBag.CheckIn?.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-4">
+                    <label for="checkOut" class="form-label">Check-out Date</label>
+                    <input type="date" id="checkOut" name="checkOut" class="form-control" value="@ViewBag.CheckOut?.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i> Check Availability
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Room @item.RoomNumber</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@item.RoomType?.Name</h6>
+                        <p class="card-text">
+                            <strong>Floor:</strong> @item.Floor<br />
+                            <strong>Price per night:</strong> $@item.PricePerNight<br />
+                            <strong>Capacity:</strong> @item.RoomType?.Capacity persons
+                        </p>
+                        <p class="card-text">@item.Description</p>
+                    </div>
+                    <div class="card-footer">
+                        <a asp-controller="Bookings" asp-action="Create" 
+                           asp-route-roomId="@item.Id"
+                           asp-route-checkIn="@ViewBag.CheckIn?.ToString("yyyy-MM-dd")"
+                           asp-route-checkOut="@ViewBag.CheckOut?.ToString("yyyy-MM-dd")"
+                           class="btn btn-success">
+                            <i class="bi bi-calendar-plus"></i> Book Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> No rooms available for the selected dates.
+        </div>
+    }
+</div> 
