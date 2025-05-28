@@ -6,9 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using HOTBOOK.Data;
 using HOTBOOK.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HOTBOOK.Controllers
 {
+    [Authorize]
     public class RoomsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,6 +21,7 @@ namespace HOTBOOK.Controllers
         }
 
         // GET: Rooms
+        [Authorize(Roles = "Admin,Staff,Guest")]
         public async Task<IActionResult> Index()
         {
             var rooms = await _context.Rooms.Include(r => r.RoomType).ToListAsync();
@@ -26,6 +29,7 @@ namespace HOTBOOK.Controllers
         }
 
         // GET: Rooms/Create
+        [Authorize(Roles = "Admin,Staff")]
         public IActionResult Create()
         {
             PopulateRoomTypesDropDownList(null);
@@ -35,6 +39,7 @@ namespace HOTBOOK.Controllers
         // POST: Rooms/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> Create(Room room)
         {
             System.Diagnostics.Debug.WriteLine($"RoomTypeId: {room.RoomTypeId}");
@@ -76,9 +81,8 @@ namespace HOTBOOK.Controllers
             ViewBag.RoomTypes = new SelectList(roomTypes, "Id", "Name", selectedRoomType);
         }
 
-
-
         // GET: Rooms/Edit/5
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -93,7 +97,8 @@ namespace HOTBOOK.Controllers
         // POST: Rooms/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Room room)
+        [Authorize(Roles = "Admin,Staff")]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,RoomNumber,RoomTypeId,PricePerNight,IsAvailable,Description,Floor,Status")] Room room)
         {
             if (id != room.Id) return NotFound();
 
@@ -117,6 +122,7 @@ namespace HOTBOOK.Controllers
         }
 
         // GET: Rooms/Delete/5
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -133,6 +139,7 @@ namespace HOTBOOK.Controllers
         // POST: Rooms/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var room = await _context.Rooms.FindAsync(id);

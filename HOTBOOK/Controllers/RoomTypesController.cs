@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HOTBOOK.Data;
 using HOTBOOK.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HOTBOOK.Controllers
 {
+    [Authorize(Roles = "Admin,Staff")]
     public class RoomTypesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -71,6 +73,7 @@ namespace HOTBOOK.Controllers
         }
 
         // GET: RoomTypes/Edit/5
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -89,6 +92,7 @@ namespace HOTBOOK.Controllers
         // POST: RoomTypes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Capacity,Description")] RoomType roomType)
         {
             if (id != roomType.Id)
@@ -120,6 +124,7 @@ namespace HOTBOOK.Controllers
         }
 
         // GET: RoomTypes/Delete/5
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -140,6 +145,7 @@ namespace HOTBOOK.Controllers
         // POST: RoomTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var roomType = await _context.RoomTypes.FindAsync(id);

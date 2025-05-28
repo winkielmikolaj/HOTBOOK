@@ -33,11 +33,16 @@ namespace HOTBOOK.Controllers
         [Authorize(Roles = "Admin,Staff,Guest")]
         public async Task<IActionResult> Index()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isAdminOrStaff = User.IsInRole("Admin") || User.IsInRole("Staff");
+
             var bookings = await _context.Bookings
                 .Include(b => b.User)
                 .Include(b => b.Room)
                 .ThenInclude(r => r.RoomType)
+                .Where(b => isAdminOrStaff || b.UserId == userId)
                 .ToListAsync();
+
             return View(bookings);
         }
 
@@ -188,13 +193,16 @@ namespace HOTBOOK.Controllers
                 return NotFound();
             }
 
-            var booking = await _context.Bookings.FindAsync(id);
+            var booking = await _context.Bookings
+                .Include(b => b.Room)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (booking == null)
             {
                 return NotFound();
             }
 
-            ViewBag.Rooms = _context.Rooms.ToList();
+            ViewBag.Rooms = await _context.Rooms.ToListAsync();
             return View(booking);
         }
 
@@ -202,7 +210,7 @@ namespace HOTBOOK.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Staff")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,RoomId,CheckInDate,CheckOutDate,TotalPrice,Status,NumberOfGuests,SpecialRequests,BookingDate")] Booking booking)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,RoomId,CheckInDate,CheckOutDate,NumberOfGuests,TotalPrice,Status,SpecialRequests")] Booking booking)
         {
             if (id != booking.Id)
             {
@@ -213,8 +221,33 @@ namespace HOTBOOK.Controllers
             {
                 try
                 {
-                    _context.Update(booking);
+                    var existingBooking = await _context.Bookings
+                        .Include(b => b.Room)
+                        .FirstOrDefaultAsync(b => b.Id == id);
+
+                    if (existingBooking == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Update only the fields that should be editable
+                    existingBooking.RoomId = booking.RoomId;
+                    existingBooking.CheckInDate = booking.CheckInDate;
+                    existingBooking.CheckOutDate = booking.CheckOutDate;
+                    existingBooking.TotalPrice = booking.TotalPrice;
+                    existingBooking.Status = booking.Status;
+                    existingBooking.NumberOfGuests = booking.NumberOfGuests;
+                    existingBooking.SpecialRequests = booking.SpecialRequests;
+
+                    // Update room availability based on status
+                    var room = await _context.Rooms.FindAsync(booking.RoomId);
+                    if (room != null)
+                    {
+                        room.IsAvailable = booking.Status != "Confirmed";
+                    }
+
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -227,10 +260,9 @@ namespace HOTBOOK.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
 
-            ViewBag.Rooms = _context.Rooms.ToList();
+            ViewBag.Rooms = await _context.Rooms.ToListAsync();
             return View(booking);
         }
 
@@ -246,6 +278,7 @@ namespace HOTBOOK.Controllers
             var booking = await _context.Bookings
                 .Include(b => b.User)
                 .Include(b => b.Room)
+                .ThenInclude(r => r.RoomType)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (booking == null)
@@ -262,7 +295,21 @@ namespace HOTBOOK.Controllers
         [Authorize(Roles = "Admin,Staff")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var booking = await _context.Bookings.FindAsync(id);
+            var booking = await _context.Bookings
+                .Include(b => b.Room)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (booking == null)
+            {
+                return NotFound();
+            }
+
+            // Update room availability if the booking was confirmed
+            if (booking.Status == "Confirmed" && booking.Room != null)
+            {
+                booking.Room.IsAvailable = true;
+            }
+
             _context.Bookings.Remove(booking);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

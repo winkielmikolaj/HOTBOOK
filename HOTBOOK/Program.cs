@@ -57,15 +57,17 @@ namespace HOTBOOK
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
 
-            // Seed Roles and Admin User
+            // Seed Roles, Admin User, and Initial Data
             using (var scope = app.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 
                 await SeedRoles.SeedRolesAsync(roleManager);
                 await SeedRoles.SeedAdminUserAsync(userManager);
                 await SeedRoles.SeedGuestUserAsync(userManager);
+                await DbInitializer.Initialize(context, userManager);
             }
 
             app.Run();

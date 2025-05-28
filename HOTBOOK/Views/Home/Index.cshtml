@@ -1,8 +1,189 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="hero-section text-center py-5 mb-5">
+    <h1 class="display-4 mb-4">Welcome to HOTBOOK</h1>
+    <p class="lead mb-4">Your perfect stay starts here</p>
+    <div class="hero-buttons">
+        <a asp-controller="Rooms" asp-action="Index" class="btn btn-primary btn-lg me-3">
+            <i class="fas fa-bed me-2"></i>View Rooms
+        </a>
+        <a asp-controller="Rooms" asp-action="Available" class="btn btn-outline-primary btn-lg">
+            <i class="fas fa-calendar-check me-2"></i>Check Availability
+        </a>
+    </div>
 </div>
+
+<div class="features-section py-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-hotel fa-3x mb-3 text-primary"></i>
+                    <h3 class="card-title">Luxury Rooms</h3>
+                    <p class="card-text">Experience comfort and elegance in our carefully designed rooms.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-concierge-bell fa-3x mb-3 text-primary"></i>
+                    <h3 class="card-title">Premium Service</h3>
+                    <p class="card-text">Enjoy our 24/7 concierge service and personalized attention.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-map-marker-alt fa-3x mb-3 text-primary"></i>
+                    <h3 class="card-title">Perfect Location</h3>
+                    <p class="card-text">Centrally located with easy access to all major attractions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="testimonials-section py-5 bg-light">
+    <h2 class="text-center mb-5">What Our Guests Say</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-star text-warning me-1"></i>
+                        <i class="fas fa-star text-warning me-1"></i>
+                        <i class="fas fa-star text-warning me-1"></i>
+                        <i class="fas fa-star text-warning me-1"></i>
+                        <i class="fas fa-star text-warning"></i>
+                    </div>
+                    <p class="card-text">"Amazing experience! The rooms are beautiful and the service is exceptional."</p>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-user-circle fa-2x me-2 text-primary"></i>
+                        <div>
+                            <h6 class="mb-0">John Doe</h6>
+                            <small class="text-muted">Business Traveler</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-star text-warning me-1"></i>
+                        <i class="fas fa-star text-warning me-1"></i>
+                        <i class="fas fa-star text-warning me-1"></i>
+                        <i class="fas fa-star text-warning me-1"></i>
+                        <i class="fas fa-star text-warning"></i>
+                    </div>
+                    <p class="card-text">"Perfect location and great amenities. Will definitely come back!"</p>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-user-circle fa-2x me-2 text-primary"></i>
+                        <div>
+                            <h6 class="mb-0">Jane Smith</h6>
+                            <small class="text-muted">Family Vacation</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-star text-warning me-1"></i>
+                        <i class="fas fa-star text-warning me-1"></i>
+                        <i class="fas fa-star text-warning me-1"></i>
+                        <i class="fas fa-star text-warning me-1"></i>
+                        <i class="fas fa-star text-warning"></i>
+                    </div>
+                    <p class="card-text">"The staff was incredibly helpful and the rooms were spotless."</p>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-user-circle fa-2x me-2 text-primary"></i>
+                        <div>
+                            <h6 class="mb-0">Mike Johnson</h6>
+                            <small class="text-muted">Weekend Getaway</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cta-section text-center py-5">
+    <h2 class="mb-4">Ready to Book Your Stay?</h2>
+    <p class="lead mb-4">Experience luxury and comfort at HOTBOOK</p>
+    <a asp-controller="Rooms" asp-action="Available" class="btn btn-primary btn-lg">
+        <i class="fas fa-calendar-check me-2"></i>Book Now
+    </a>
+</div>
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 100px 0;
+        margin-top: -2rem;
+        margin-bottom: 3rem;
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
+    }
+
+    .hero-section h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-section .lead {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .hero-buttons .btn {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+    }
+
+    .features-section .card {
+        transition: transform 0.3s ease;
+    }
+
+    .features-section .card:hover {
+        transform: translateY(-10px);
+    }
+
+    .features-section .fa-3x {
+        color: var(--secondary-color);
+    }
+
+    .testimonials-section {
+        background-color: #f8f9fa;
+        border-radius: var(--border-radius);
+    }
+
+    .cta-section {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border-radius: var(--border-radius);
+        margin: 3rem 0;
+    }
+
+    .cta-section .btn {
+        background: white;
+        color: var(--primary-color);
+        border: none;
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+    }
+
+    .cta-section .btn:hover {
+        background: var(--light-color);
+        transform: translateY(-2px);
+    }
+</style>
