@@ -18,7 +18,7 @@
             <thead>
                 <tr>
                     <th>Booking ID</th>
-                    <th>Guest</th>
+                    <th>User</th>
                     <th>Room</th>
                     <th>Check-in</th>
                     <th>Check-out</th>
@@ -32,7 +32,7 @@
                 {
                     <tr>
                         <td>@item.Id</td>
-                        <td>@item.Guest?.FirstName @item.Guest?.LastName</td>
+                        <td>@item.User?.Email ?? item.User?.UserName</td>
                         <td>@item.Room?.RoomNumber (@item.Room?.RoomType?.Name)</td>
                         <td>@item.CheckInDate.ToString("MM/dd/yyyy")</td>
                         <td>@item.CheckOutDate.ToString("MM/dd/yyyy")</td>

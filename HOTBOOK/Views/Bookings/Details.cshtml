@@ -1,0 +1,66 @@
+@model HOTBOOK.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<div class="container">
+    <h1>Booking Details</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Booking ID</dt>
+                <dd class="col-sm-9">@Model.Id</dd>
+
+                <dt class="col-sm-3">Room</dt>
+                <dd class="col-sm-9">@Model.Room.RoomNumber</dd>
+
+                <dt class="col-sm-3">Check-in Date</dt>
+                <dd class="col-sm-9">@Model.CheckInDate.ToShortDateString()</dd>
+
+                <dt class="col-sm-3">Check-out Date</dt>
+                <dd class="col-sm-9">@Model.CheckOutDate.ToShortDateString()</dd>
+
+                <dt class="col-sm-3">Number of Guests</dt>
+                <dd class="col-sm-9">@Model.NumberOfGuests</dd>
+
+                <dt class="col-sm-3">Total Price</dt>
+                <dd class="col-sm-9">@Model.TotalPrice.ToString("C")</dd>
+
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9">
+                    <span class="badge @(Model.Status == "Confirmed" ? "bg-success" : 
+                                        Model.Status == "Pending" ? "bg-warning" : 
+                                        Model.Status == "Cancelled" ? "bg-danger" : "bg-secondary")">
+                        @Model.Status
+                    </span>
+                </dd>
+
+                <dt class="col-sm-3">Booking Date</dt>
+                <dd class="col-sm-9">@Model.BookingDate.ToShortDateString()</dd>
+
+                @if (!string.IsNullOrEmpty(Model.SpecialRequests))
+                {
+                    <dt class="col-sm-3">Special Requests</dt>
+                    <dd class="col-sm-9">@Model.SpecialRequests</dd>
+                }
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> New Booking
+        </a>
+        @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Edit
+            </a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Delete
+            </a>
+        }
+    </div>
+</div> 
